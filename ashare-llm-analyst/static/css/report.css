@@ -1,0 +1,367 @@
+:root {
+    /* 更改主色调为更柔和的深蓝灰色 */
+    --primary-color: #445566;
+    --text-color: #2c3e50;
+    --border-color: #e0e4e8;
+    --bg-color: #f5f7fa;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    /* 添加新的颜色变量 */
+    --header-bg: #f8fafc;
+    --section-bg: #ffffff;
+    --hover-bg: #f8fafc;
+    --positive-color: #27ae60;
+    --negative-color: #e74c3c;
+    --neutral-color: #696969;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin: 2rem 0;
+    font-size: 2.6rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.stock-container {
+    background-color: var(--section-bg);
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid var(--border-color);
+}
+
+h2 {
+    color: var(--text-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.8rem;
+    margin-top: 0;
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+h3 {
+    color: var(--primary-color);
+    margin: 1.5rem 0 1rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1rem 0;
+    background-color: var(--section-bg);
+    box-shadow: var(--shadow);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.data-table th, .data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    font-size: 1.15rem;
+}
+
+.data-table th:first-child {
+    text-align: left;
+}
+
+.data-table th:last-child {
+    text-align: left;
+    padding-left: 2rem;
+}
+
+.data-table td {
+    font-weight: 500;
+    font-size: 1.12rem;
+}
+
+.data-table td:first-child {
+    text-align: left;
+}
+
+.data-table td:last-child {
+    text-align: left;
+    padding-left: 2rem;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: var(--header-bg);
+}
+
+.data-table tr:hover {
+    background-color: var(--hover-bg);
+}
+
+.chart-container {
+    margin: 2rem 0;
+    background-color: var(--section-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.chart-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 4px;
+}
+
+.signal-list {
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin: 0;
+}
+
+.signal-list li {
+    background-color: var(--section-bg);
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary-color);
+    font-weight: 500;
+    font-size: 1.02rem;
+}
+
+.signal-list li:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+}
+
+.indicator-section {
+    background-color: var(--section-bg);
+    padding: 1.8rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.positive {
+    color: var(--positive-color);
+    font-weight: 600;
+}
+
+.negative {
+    color: var(--negative-color);
+    font-weight: 600;
+}
+
+.neutral {
+    color: var(--neutral-color);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .stock-container {
+        padding: 1rem;
+    }
+
+    .data-table th, .data-table td {
+        padding: 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .signal-list {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    .signal-list li {
+        font-size: 0.95rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .data-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+}
+
+/* 报告生成时间样式 */
+.report-time {
+    text-align: center;
+    color: var(--primary-color);
+    margin: -1rem 0 2rem 0;
+    font-size: 1.1rem;
+    padding: 0.5rem;
+    background-color: var(--header-bg);
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.report-time span {
+    font-weight: 500;
+    margin-left: 0.5rem;
+    color: var(--text-color);
+}
+
+.section-divider {
+    margin: 3rem 0 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.section-divider h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+}
+
+.analysis-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.analysis-content p {
+    margin: 1rem 0;
+}
+
+/* 数字和百分比的样式 */
+.analysis-content span.number {
+    font-family: Monaco, Consolas, monospace;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 提示和警告的样式 */
+.analysis-content .warning {
+    color: var(--negative-color);
+    font-weight: 500;
+}
+
+.analysis-content .highlight {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .analysis-content {
+        font-size: 1rem;
+    }
+}
+.analysis-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    padding: 1rem;
+}
+
+.analysis-content p {
+    margin: 0.8rem 0;
+}
+
+.analysis-content .section-title {
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--primary-color);
+    margin: 1.5rem 0 1rem 0;
+}
+
+.analysis-content .item-title {
+    font-weight: 500;
+    margin: 1rem 0 0.5rem 1rem;
+    color: var(--text-color);
+}
+
+.analysis-content .item-content {
+    margin: 0.5rem 0 0.8rem 2rem;
+    color: var(--text-color);
+}
+
+.analysis-content .list-item {
+    margin: 0.5rem 0 0.5rem 2rem;
+    position: relative;
+}
+
+.analysis-content .list-item::before {
+    content: "•";
+    position: absolute;
+    left: -1rem;
+    color: var(--primary-color);
+}
+
+/* 数字和重要数据的样式 */
+.analysis-content span.number {
+    font-family: Monaco, Consolas, monospace;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 警告和提示的样式 */
+.analysis-content .warning {
+    color: var(--negative-color);
+    font-weight: 500;
+}
+
+.analysis-content .highlight {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .analysis-content {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+
+    .analysis-content .item-content {
+        margin-left: 1.5rem;
+    }
+}
