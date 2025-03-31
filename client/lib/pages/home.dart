@@ -160,10 +160,11 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ReportPage(
-                filePath: file.path,
-                title: '${stock['name']} 分析报告',
-              ),
+              builder:
+                  (context) => ReportPage(
+                    filePath: file.path,
+                    title: '${stock['name']} 分析报告',
+                  ),
             ),
           );
         }
@@ -175,16 +176,16 @@ class _HomePageState extends State<HomePage> {
       if (response.statusCode == 200) {
         // Write file
         await file.writeAsBytes(response.bodyBytes);
-        
         // Open the downloaded file in WebView
         if (mounted) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ReportPage(
-                filePath: file.path,
-                title: '${stock['name']} 分析报告',
-              ),
+              builder:
+                  (context) => ReportPage(
+                    filePath: file.path,
+                    title: '${stock['name']} 分析报告',
+                  ),
             ),
           );
         }
@@ -209,7 +210,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> checkVersion() async {
     if (_currentVersion.isEmpty) return;
-    
     try {
       final response = await http.get(Uri.parse(ApiConfig.versionUrl));
       if (response.statusCode == 200) {
@@ -217,7 +217,6 @@ class _HomePageState extends State<HomePage> {
         // 简单的版本号比较，假设版本号格式为 x.y.z
         final serverParts = serverVersion.split('.');
         final currentParts = _currentVersion.split('.');
-        
         bool isNewer = false;
         for (int i = 0; i < 3; i++) {
           final server = int.parse(serverParts[i]);
@@ -287,243 +286,259 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
       ),
-      body:
-          isLoading
-              ? const Center(child: TDCircleIndicator())
-              : stocks.isEmpty
-              ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        children: [
+          if (_hasNewVersion)
+            InkWell(
+              onTap: () async {
+                final url = Uri.parse(ApiConfig.downloadUrl);
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                color: tdTheme.brandColor1,
+                child: Row(
                   children: [
                     Icon(
-                      TDIcons.info_circle,
-                      size: 64,
-                      color: tdTheme.grayColor6,
+                      TDIcons.info_circle_filled,
+                      color: tdTheme.brandColor7,
+                      size: 20,
                     ),
-                    const SizedBox(height: 16),
-                    TDText(
-                      "暂无分析记录",
-                      font: tdTheme.fontBodyLarge,
-                      textColor: tdTheme.fontGyColor3,
+                    const SizedBox(width: 8),
+                    Text(
+                      '新版本可用，点击下载',
+                      style: TextStyle(
+                        color: tdTheme.brandColor7,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      TDIcons.chevron_right,
+                      color: tdTheme.brandColor7,
+                      size: 20,
                     ),
                   ],
                 ),
-              )
-              : Column(
-                  children: [
-                    if (_hasNewVersion)
-                      InkWell(
-                        onTap: () async {
-                          final url = Uri.parse(ApiConfig.downloadUrl);
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url, mode: LaunchMode.externalApplication);
-                          }
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                          color: tdTheme.brandColor1,
-                          child: Row(
-                            children: [
-                              Icon(
-                                TDIcons.info_circle_filled,
-                                color: tdTheme.brandColor7,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '新版本可用，点击下载',
-                                style: TextStyle(
-                                  color: tdTheme.brandColor7,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const Spacer(),
-                              Icon(
-                                TDIcons.chevron_right,
-                                color: tdTheme.brandColor7,
-                                size: 20,
-                              ),
-                            ],
-                          ),
-                        ),
+              ),
+            ),
+          isLoading
+              ? const Expanded(child: Center(child: TDCircleIndicator()))
+              : stocks.isEmpty
+              ? Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        TDIcons.info_circle,
+                        size: 64,
+                        color: tdTheme.grayColor6,
                       ),
-                    Expanded(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: stocks.length,
-                        separatorBuilder: (context, index) => const SizedBox(height: 8),
-                        itemBuilder: (context, index) {
-                          final stock = stocks[index];
-                          final isSelected = _selectedIds.contains(stock['id']);
-                          return GestureDetector(
-                            onTap:
-                                _isSelectMode
-                                    ? () {
-                                      setState(() {
-                                        if (isSelected) {
-                                          _selectedIds.remove(stock['id']);
-                                        } else {
-                                          _selectedIds.add(stock['id']);
-                                        }
-                                      });
-                                    }
-                                    : null,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color:
-                                    isSelected
-                                        ? tdTheme.brandColor1.withOpacity(0.1)
-                                        : Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
+                      const SizedBox(height: 16),
+                      TDText(
+                        "暂无分析记录",
+                        font: tdTheme.fontBodyLarge,
+                        textColor: tdTheme.fontGyColor3,
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              : Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: stocks.length,
+                      separatorBuilder:
+                          (context, index) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final stock = stocks[index];
+                        final isSelected = _selectedIds.contains(stock['id']);
+                        return GestureDetector(
+                          onTap:
+                              _isSelectMode
+                                  ? () {
+                                    setState(() {
+                                      if (isSelected) {
+                                        _selectedIds.remove(stock['id']);
+                                      } else {
+                                        _selectedIds.add(stock['id']);
+                                      }
+                                    });
+                                  }
+                                  : null,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? tdTheme.brandColor1.withOpacity(0.1)
+                                      : Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ListTile(
+                              title: Text(stock['name']),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(stock['code']),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        DateTime.parse(
+                                          stock['analyst_at'],
+                                        ).toString().substring(0, 16),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: tdTheme.fontGyColor3,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              stock['status'] == 9
+                                                  ? tdTheme.errorColor1
+                                                  : stock['status'] == 3
+                                                  ? tdTheme.successColor1
+                                                  : stock['status'] == 2
+                                                  ? tdTheme.successColor1
+                                                  : stock['status'] == 1
+                                                  ? tdTheme.warningColor1
+                                                  : tdTheme.brandColor1,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          stock['status'] == 9
+                                              ? '分析失败'
+                                              : stock['status'] == 3
+                                              ? '结束'
+                                              : stock['status'] == 2
+                                              ? '分析完成'
+                                              : stock['status'] == 1
+                                              ? '分析中'
+                                              : '就绪',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color:
+                                                stock['status'] == 9
+                                                    ? tdTheme.errorColor7
+                                                    : stock['status'] == 3
+                                                    ? tdTheme.successColor7
+                                                    : stock['status'] == 9
+                                                    ? tdTheme.successColor7
+                                                    : stock['status'] == 2
+                                                    ? tdTheme.warningColor7
+                                                    : tdTheme.brandColor7,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              child: ListTile(
-                                title: Text(stock['name']),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(stock['code']),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          DateTime.parse(stock['analyst_at']).toString().substring(0, 16),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: tdTheme.fontGyColor3,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                stock['status'] == 9
-                                                    ? tdTheme.errorColor1
-                                                    : stock['status'] == 3
-                                                    ? tdTheme.successColor1
-                                                    : stock['status'] == 2
-                                                    ? tdTheme.successColor1
-                                                    : stock['status'] == 1
-                                                    ? tdTheme.warningColor1
-                                                    : tdTheme.brandColor1,
-                                            borderRadius: BorderRadius.circular(4),
-                                          ),
-                                          child: Text(
-                                            stock['status'] == 9
-                                                ? '分析失败'
-                                                : stock['status'] == 3
-                                                ? '结束'
-                                                : stock['status'] == 2
-                                                ? '分析完成'
-                                                : stock['status'] == 1
-                                                ? '分析中'
-                                                : '就绪',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color:
-                                                  stock['status'] == 9
-                                                      ? tdTheme.errorColor7
-                                                      : stock['status'] == 3
-                                                      ? tdTheme.successColor7
-                                                      : stock['status'] == 9
-                                                      ? tdTheme.successColor7
-                                                      : stock['status'] == 2
-                                                      ? tdTheme.warningColor7
-                                                      : tdTheme.brandColor7,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    if (stock['status'] == 3 || stock['status'] == 2)
-                                      IconButton(
-                                        icon: _downloadingIds.contains(stock['id'])
-                                            ? SizedBox(
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (stock['status'] == 3 ||
+                                      stock['status'] == 2)
+                                    IconButton(
+                                      icon:
+                                          _downloadingIds.contains(stock['id'])
+                                              ? SizedBox(
                                                 width: 20,
                                                 height: 20,
                                                 child: CircularProgressIndicator(
                                                   strokeWidth: 2,
-                                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                                    tdTheme.brandColor7,
-                                                  ),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                        Color
+                                                      >(tdTheme.brandColor7),
                                                 ),
                                               )
-                                            : Icon(
+                                              : Icon(
                                                 TDIcons.browse,
                                                 color: tdTheme.brandColor7,
                                                 size: 20,
                                               ),
-                                        onPressed: _downloadingIds.contains(stock['id'])
-                                            ? null
-                                            : () async {
-                                                await previewReport(stock['id']);
+                                      onPressed:
+                                          _downloadingIds.contains(stock['id'])
+                                              ? null
+                                              : () async {
+                                                await previewReport(
+                                                  stock['id'],
+                                                );
                                               },
-                                      ),
-                                    if (!_isSelectMode &&
-                                        (stock['status'] == 9 ||
-                                            (stock['status'] == 0 &&
-                                                DateTime.now()
-                                                        .difference(
-                                                          DateTime.parse(
-                                                            stock['analyst_at'],
-                                                          ),
-                                                        )
-                                                        .inMinutes >=
-                                                    1)))
-                                      IconButton(
-                                        icon:
-                                            _retryingIds.contains(stock['id'])
-                                                ? SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircularProgressIndicator(
-                                                    strokeWidth: 2,
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation<Color>(
-                                                          tdTheme.brandColor7,
+                                    ),
+                                  if (!_isSelectMode &&
+                                      (stock['status'] == 9 ||
+                                          (stock['status'] == 0 &&
+                                              DateTime.now()
+                                                      .difference(
+                                                        DateTime.parse(
+                                                          stock['analyst_at'],
                                                         ),
-                                                  ),
-                                                )
-                                                : Icon(
-                                                  TDIcons.refresh,
-                                                  color: tdTheme.brandColor7,
-                                                  size: 20,
+                                                      )
+                                                      .inMinutes >=
+                                                  1)))
+                                    IconButton(
+                                      icon:
+                                          _retryingIds.contains(stock['id'])
+                                              ? SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                        Color
+                                                      >(tdTheme.brandColor7),
                                                 ),
-                                        onPressed:
-                                            _retryingIds.contains(stock['id'])
-                                                ? null
-                                                : () => retryAnalysis(stock['id']),
-                                      ),
-                                  ],
-                                ),
+                                              )
+                                              : Icon(
+                                                TDIcons.refresh,
+                                                color: tdTheme.brandColor7,
+                                                size: 20,
+                                              ),
+                                      onPressed:
+                                          _retryingIds.contains(stock['id'])
+                                              ? null
+                                              : () =>
+                                                  retryAnalysis(stock['id']),
+                                    ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+        ],
+      ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 62.0, right: 62.0),
         child: TDButton(

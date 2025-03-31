@@ -86,16 +86,6 @@ SELECT id, name, code, status, sd, message, created_at, analyst_at FROM stocks
     final db = await database;
 
     try {
-      // 检查是否已存在
-      final List<Map<String, dynamic>> existing = await db.query(
-        'stocks',
-        where: 'code = ?',
-        whereArgs: [code],
-      );
-
-      if (existing.isNotEmpty) {
-        return existing.first['id'] as int;
-      }
       final n = DateTime.now().toIso8601String();
       final data = {
         'name': name,
