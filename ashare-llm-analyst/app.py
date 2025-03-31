@@ -24,7 +24,7 @@ async def start():
 def run_analysis_task(sd: str, name: str, code: str):
     try:
         task_status[sd]['status'] = 'running'
-        analyzer = StockAnalyzer({name: code}, deepseek_api_key=os.getenv('DEEPSEEK_API_KEY', ''))
+        analyzer = StockAnalyzer({name: code})
         html_path = f'{filepath}/{sd}.html'
         analyzer.run_analysis(output_path=html_path)        
         task_status[sd]['status'] = 'completed'
